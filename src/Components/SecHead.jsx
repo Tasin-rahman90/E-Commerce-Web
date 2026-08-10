@@ -1,7 +1,7 @@
 import React from 'react'
 import Container from './Container'
 
-const SecHead = ({heading,title}) => {
+const SecHead = ({heading,title,}) => {
     return (
 
         <div>

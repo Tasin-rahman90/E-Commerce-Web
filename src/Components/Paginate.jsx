@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ReactPaginate from "react-paginate";
 import Card from "./Card";
 
-const Paginate = ({ itemsPerPage, products }) => {
+const Paginate = ({ itemsPerPage, products, }) => {
     const [itemOffset, setItemOffset] = useState(0);
 
     const endOffset = itemOffset + itemsPerPage;
@@ -20,6 +20,7 @@ const Paginate = ({ itemsPerPage, products }) => {
                 {currentItems.map((item) => (
                     <div key={item.id} className="w-[32%]">
                         <Card
+                            id={item.id}
                             parcent={item.discountPercentage}
                             modle={item.title}
                             discountPrice={(

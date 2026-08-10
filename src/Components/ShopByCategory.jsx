@@ -13,10 +13,10 @@ const ShopByCategory = () => {
 
   const dispatch = useDispatch();
 
-  // Redux store থেকে products নেওয়া
+ 
   const products = useSelector((state) => state.products.value);
 
-  // API থেকে products fetch
+ 
   useEffect(() => {
     fetch("https://dummyjson.com/products")
       .then((res) => res.json())
@@ -31,12 +31,12 @@ const ShopByCategory = () => {
       });
   }, [dispatch]);
 
-  // Unique Category
+
   const UniqueCategory = [
     ...new Set(products.map((item) => item.category)),
   ];
 
-  // Category অনুযায়ী products filter
+ 
   const filteredProducts =
     selectedCategory === "all"
       ? products
@@ -47,7 +47,7 @@ const ShopByCategory = () => {
       <Container>
         <BreadCrump />
 
-        {/* Header */}
+       
         <div className="flex justify-between items-center pt-12.5 pb-6">
           <h3 className="text-[20px] font-bold">Shop by Category</h3>
 
@@ -68,13 +68,13 @@ const ShopByCategory = () => {
           </div>
         </div>
 
-        {/* Main Content */}
+       
         <div className="flex justify-between">
-          {/* Category */}
+          
           <div className="w-[20%]">
             <ul className="space-y-4 cursor-pointer">
 
-              {/* All Category */}
+             
               <li
                 onClick={() => setSelectedCategory("all")}
                 className={`capitalize hover:text-red-400 hover:underline ${
@@ -86,7 +86,7 @@ const ShopByCategory = () => {
                 All
               </li>
 
-              {/* Unique Categories */}
+             
               {UniqueCategory.map((item) => (
                 <li
                   key={item}
@@ -103,7 +103,7 @@ const ShopByCategory = () => {
             </ul>
           </div>
 
-          {/* Products */}
+          
           <div className="w-[78%]">
             {loading ? (
               <div className="flex flex-wrap gap-x-7.5 gap-y-10">
