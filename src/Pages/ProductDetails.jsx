@@ -312,9 +312,6 @@ const ProductDetails = () => {
                         />
 
                     </div>
-                    <div>
-                        <h2 className="bg-amber-500 text-5xl">HEllo </h2>
-                    </div>
                 </Container>
             </div>
         </>
