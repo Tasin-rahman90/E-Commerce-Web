@@ -7,10 +7,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Provider } from 'react-redux'
 import Store from './Components/Store'
+import { ToastContainer } from 'react-toastify';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={Store}>
+       <ToastContainer />
       <RouterProvider router={router} />
     </Provider>
   </StrictMode>,
