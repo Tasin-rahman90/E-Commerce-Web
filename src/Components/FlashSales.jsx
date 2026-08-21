@@ -13,8 +13,11 @@ import console from "../assets/Frame 611.png";
 import kybord from "../assets/kybord.png";
 import monitor from "../assets/Frame 613 (1).png";
 import chair from "../assets/chair.png";
+import { useSelector } from "react-redux";
 
 const FlashSales = () => {
+
+  
 
   function SampleNextArrow({ onClick }) {
     return (

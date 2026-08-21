@@ -21,6 +21,7 @@ const Paginate = ({ itemsPerPage, products, }) => {
                     <div key={item.id} className="w-[32%]">
                         <Card
                             id={item.id}
+                            productDeatils={item}
                             parcent={item.discountPercentage}
                             modle={item.title}
                             discountPrice={(

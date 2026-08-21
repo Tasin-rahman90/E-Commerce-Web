@@ -3,6 +3,7 @@ import Home from "./Pages/Home";
 import RootLayout from "./RootLayout";
 import ShopByCategory from "./Components/ShopByCategory";
 import ProductDetails from "./Pages/ProductDetails";
+import Cart from "./Pages/Cart";
 
 
 export const router = createBrowserRouter([
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: "ShopByCategory", Component: ShopByCategory },
       { path: "productDetails/:id", Component: ProductDetails },
+      { path: "cartPage", Component: Cart },
     ],
   },
 ]);
