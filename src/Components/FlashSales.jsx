@@ -9,36 +9,34 @@ import CountDown from "./CountDown";
 import Card from "./Card";
 import Btn from "./Btn";
 
-import console from "../assets/Frame 611.png";
-import kybord from "../assets/kybord.png";
-import monitor from "../assets/Frame 613 (1).png";
-import chair from "../assets/chair.png";
-import { useSelector } from "react-redux";
-
-const FlashSales = () => {
+const FlashSales = ({ products = [] }) => {
 
   
 
   function SampleNextArrow({ onClick }) {
     return (
-      <div
+      <button
+        type="button"
+        aria-label="Next flash sale products"
         onClick={onClick}
-        className="absolute -top-16 right-0 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-[#DB4444] hover:text-white"
+        className="absolute -top-16 right-0 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-primary hover:text-white"
       >
         <GoArrowRight className="text-2xl" />
-      </div>
+      </button>
     );
   }
 
 
   function SamplePrevArrow({ onClick }) {
     return (
-      <div
+      <button
+        type="button"
+        aria-label="Previous flash sale products"
         onClick={onClick}
-        className="absolute -top-16 right-14 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-[#DB4444] hover:text-white"
+        className="absolute -top-16 right-14 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-primary hover:text-white"
       >
         <GoArrowLeft className="text-2xl" />
-      </div>
+      </button>
     );
   }
 
@@ -81,76 +79,27 @@ const FlashSales = () => {
 
         <div className="relative mt-10">
           <Slider {...settings}>
-            <div className="px-3">
-              <Card
-                parcent="-24%"
-                itemImg={console}
-                modle="AK-900 Wired Keyboard"
-                discountPrice="$990"
-                regularPrice="$1120"
-                rate="(88)"
-              />
-            </div>
-
-            <div className="px-3">
-              <Card
-                parcent="-67%"
-                itemImg={kybord}
-                modle="IPS LCD Gaming Monitor"
-                discountPrice="$370"
-                regularPrice="$400"
-                rate="(88)"
-              />
-            </div>
-
-            <div className="px-3">
-              <Card
-                parcent="-30%"
-                itemImg={chair}
-                modle="HAVIT HV-G92 Gamepad"
-                discountPrice="$120"
-                regularPrice="$160"
-                rate="(88)"
-              />
-            </div>
-
-            <div className="px-3">
-              <Card
-                parcent="-23%"
-                itemImg={monitor}
-                modle="S-Series Comfort Chair"
-                discountPrice="$375"
-                regularPrice="$400"
-                rate="(88)"
-              />
-            </div>
-
-            <div className="px-3">
-              <Card
-                parcent="-45%"
-                itemImg={chair}
-                modle="HAVIT HV-G92 Gamepad"
-                discountPrice="$120"
-                regularPrice="$160"
-                rate="(88)"
-              />
-            </div>
-
-            <div className="px-3">
-              <Card
-                parcent="90%"
-                itemImg={kybord}
-                modle="IPS LCD Gaming Monitor"
-                discountPrice="$370"
-                regularPrice="$400"
-                rate="(88)"
-              />
-            </div>
+            {products.slice(0, 6).map((product) => (
+              <div className="px-3" key={product.id}>
+                <Card
+                  id={product.id}
+                  productDeatils={product}
+                  parcent={product.discountPercentage}
+                  itemImg={product.thumbnail}
+                  modle={product.title}
+                  discountPrice={`$${product.price.toFixed(2)}`}
+                  regularPrice={`$${(
+                    product.price / (1 - product.discountPercentage / 100)
+                  ).toFixed(2)}`}
+                  rate={product.rating}
+                />
+              </div>
+            ))}
           </Slider>
         </div>
 
         <div className="flex justify-center mt-14">
-          <Btn text="View All Products" />
+          <Btn text="View All Products" to="/ShopByCategory" />
         </div>
       </Container>
     </div>

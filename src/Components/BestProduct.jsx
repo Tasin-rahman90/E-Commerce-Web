@@ -3,13 +3,9 @@ import Container from './Container'
 import SecHead from './SecHead'
 import Btn from './Btn'
 import Card from './Card'
-import Frame from '../assets/Frame 605.png'
-import bag from '../assets/Frame 606.png'
-import CpuColer from '../assets/Frame 610.png'
-import BookSlef from '../assets/Frame 612 (1).png'
 import Experience from './Experience'
 
-const BestProduct = () => {
+const BestProduct = ({ products = [] }) => {
   return (
     <>
       <div className='mt-17.5 mb-35'>
@@ -22,42 +18,26 @@ const BestProduct = () => {
             <div>
               <Btn
                 text='View All'
+                to='/ShopByCategory'
               />
             </div>
           </div>
           <div className='flex justify-between mt-20'>
-            <Card
-              parcent='43%'
-              modle='The north coat'
-              discountPrice='$342'
-              regularPrice='$4536'
-              rate='(64)'
-              itemImg={Frame}
-            />
-            <Card
-              parcent='31%'
-              modle='The north coat'
-              discountPrice='$245'
-              regularPrice='$876'
-              rate='(65)'
-              itemImg={bag}
-            />
-            <Card
-              parcent='23%'
-              modle='The north coat'
-              discountPrice='$216'
-              regularPrice='$345'
-              rate='(63)'
-              itemImg={CpuColer}
-            />
-            <Card
-              parcent='34%'
-              modle='The north coat'
-              discountPrice='$245'
-              regularPrice='$345'
-              rate='(45)'
-              itemImg={BookSlef}
-            />
+            {products.slice(0, 4).map((product) => (
+              <Card
+                key={product.id}
+                id={product.id}
+                productDeatils={product}
+                parcent={product.discountPercentage}
+                modle={product.title}
+                discountPrice={`$${product.price.toFixed(2)}`}
+                regularPrice={`$${(
+                  product.price / (1 - product.discountPercentage / 100)
+                ).toFixed(2)}`}
+                rate={product.rating}
+                itemImg={product.thumbnail}
+              />
+            ))}
           </div>
           <Experience className='mt-35 mb-17.75'/>
         </Container>

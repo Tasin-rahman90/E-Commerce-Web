@@ -1,5 +1,7 @@
 import React from 'react'
 import Container from './Container'
+import { Link } from 'react-router'
+import { toast } from 'react-toastify'
 import Logo1 from '../assets/Logo (1).png'
 import send from '../assets/send.png'
 import QrCode from '../assets/Qr Code.png'
@@ -12,6 +14,12 @@ import { FaLinkedin } from "react-icons/fa6";
 import iconcopyri from '../assets/icon-copyright.png'
 
 const Footer = () => {
+  const handleNewsletterSubmit = (event) => {
+    event.preventDefault()
+    event.currentTarget.reset()
+    toast.success('Thanks for subscribing!')
+  }
+
   return (
     <footer className="bg-black text-white">
       <Container className="px-4 sm:px-6 lg:px-0">
@@ -28,19 +36,20 @@ const Footer = () => {
 
             <p>Get 10% off your first order</p>
 
-            <div className="mt-4 relative">
+            <form onSubmit={handleNewsletterSubmit} className="mt-4 relative">
               <input
                 type="email"
+                name="email"
                 placeholder="Enter your email"
                 className="w-full border border-white rounded-sm bg-transparent py-3 pl-4 pr-12 text-white placeholder:text-white outline-none"
+                aria-label="Email address for newsletter"
+                required
               />
 
-              <img
-                src={send}
-                alt="Send"
-                className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-              />
-            </div>
+              <button type="submit" aria-label="Subscribe to newsletter" className="absolute right-4 top-1/2 -translate-y-1/2">
+                <img src={send} alt="" />
+              </button>
+            </form>
           </div>
 
        
@@ -48,12 +57,12 @@ const Footer = () => {
             <h2 className="text-xl font-medium">Support</h2>
 
             <h3 className="pt-6 pb-4">
-              111 Bijoy Sarani, Dhaka, DH 1515, Bangladesh.
+              111 Bijoy Sarani, Dhaka 1515, Bangladesh.
             </h3>
 
-            <p>exclusive@gmail.com</p>
+            <a href="mailto:exclusive@gmail.com" className="hover:underline">exclusive@gmail.com</a>
 
-            <p className="pt-4">+88015-88888-9999</p>
+            <a href="tel:+88015888889999" className="block pt-4 hover:underline">+88015-88888-9999</a>
           </div>
 
          
@@ -61,11 +70,11 @@ const Footer = () => {
             <h2 className="text-xl font-medium mb-6">Account</h2>
 
             <ul className="space-y-4">
-              <li>My Account</li>
-              <li>Login / Register</li>
-              <li>Cart</li>
-              <li>Wishlist</li>
-              <li>Shop</li>
+              <li><Link to="/account" className="hover:underline">My Account</Link></li>
+              <li><Link to="/login" className="hover:underline">Login / Register</Link></li>
+              <li><Link to="/cartPage" className="hover:underline">Cart</Link></li>
+              <li><Link to="/wishlist" className="hover:underline">Wishlist</Link></li>
+              <li><Link to="/ShopByCategory" className="hover:underline">Shop</Link></li>
             </ul>
           </div>
 
@@ -79,7 +88,8 @@ const Footer = () => {
               <li>Privacy Policy</li>
               <li>Terms Of Use</li>
               <li>FAQ</li>
-              <li>Contact</li>
+              <li><Link to="/contact" className="hover:underline">Contact</Link></li>
+              <li><Link to="/about" className="hover:underline">About us</Link></li>
             </ul>
           </div>
 
@@ -103,10 +113,10 @@ const Footer = () => {
             </div>
 
             <div className="flex gap-6 text-2xl pt-6">
-              <FaFacebookF className="cursor-pointer hover:text-gray-300 duration-300" />
-              <LuTwitter className="cursor-pointer hover:text-gray-300 duration-300" />
-              <FaInstagram className="cursor-pointer hover:text-gray-300 duration-300" />
-              <FaLinkedin className="cursor-pointer hover:text-gray-300 duration-300" />
+              <a href="https://www.facebook.com/" aria-label="Facebook" target="_blank" rel="noreferrer" className="hover:text-gray-300 duration-300"><FaFacebookF /></a>
+              <a href="https://x.com/" aria-label="X" target="_blank" rel="noreferrer" className="hover:text-gray-300 duration-300"><LuTwitter /></a>
+              <a href="https://www.instagram.com/" aria-label="Instagram" target="_blank" rel="noreferrer" className="hover:text-gray-300 duration-300"><FaInstagram /></a>
+              <a href="https://www.linkedin.com/" aria-label="LinkedIn" target="_blank" rel="noreferrer" className="hover:text-gray-300 duration-300"><FaLinkedin /></a>
             </div>
           </div>
 

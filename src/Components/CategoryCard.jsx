@@ -1,9 +1,10 @@
 import React from 'react'
+import { Link } from 'react-router'
 
-const CategoryCard = ({children,title}) => {
+const CategoryCard = ({children,title,to}) => {
     return (
-        <>
-            <div className='w-42.5 h-36.25 rounded-sm border p-6.25 my-15 group hover:bg-primary hover:border-primary transition-all duration-300 categoryItem'>
+        <Link to={to} className='block'>
+            <div className='w-full h-36.25 rounded-sm border p-6.25 my-8 group hover:bg-primary hover:border-primary transition-all duration-300 categoryItem'>
 
                 <div className="icon text-black group-hover:text-white transition-all duration-300">
                    {children}
@@ -14,7 +15,7 @@ const CategoryCard = ({children,title}) => {
                 </p>
 
             </div>
-        </>
+        </Link>
     )
 }
 

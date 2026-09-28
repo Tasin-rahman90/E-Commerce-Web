@@ -11,7 +11,6 @@ const Header = () => {
           
           <div className="hidden md:block w-20"></div>
 
-          
           <p className="text-xs sm:text-sm text-center">
             Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%!
             <NavLink to="/ShopByCategory"><span className="font-semibold underline cursor-pointer ml-2">
@@ -19,17 +18,12 @@ const Header = () => {
             </span></NavLink>
           </p>
 
-        
           <select
             className="bg-black text-white outline-none cursor-pointer text-xs sm:text-sm"
             defaultValue="en"
           >
-            <option value="en" className="text-black bg-white">
-              English
-            </option>
-            <option value="bn" className="text-black bg-white">
-              বাংলা
-            </option>
+            <option value="en" className="text-black bg-white">English</option>
+            <option value="bn" className="text-black bg-white">বাংলা</option>
           </select>
         </div>
       </Container>

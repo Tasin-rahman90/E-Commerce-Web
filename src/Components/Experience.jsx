@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Img from '../assets/BackGroundImg.png'
 import { countDownDateAndTime } from "countdown-date-time";
+import { Link } from 'react-router'
 
 
 const Experience = ({ className }) => {
@@ -76,9 +77,9 @@ const Experience = ({ className }) => {
                     </div>
 
 
-                    <button className='text-white bg-[#00FF66] py-4 px-12 rounded-sm mt-10'>
+                    <Link to="/ShopByCategory?category=mobile-accessories" className='inline-block text-white bg-[#00FF66] py-4 px-12 rounded-sm mt-10 transition-opacity hover:opacity-90'>
                         Buy Now!
-                    </button>
+                    </Link>
 
 
                 </div>

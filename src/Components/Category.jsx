@@ -1,323 +1,185 @@
-import React from 'react'
-import Container from './Container'
-import SecHead from './SecHead'
-import CategoryCard from './CategoryCard'
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import Slider from "react-slick";
+import {
+  FiBox,
+  FiCamera,
+  FiCoffee,
+  FiDroplet,
+  FiGift,
+  FiHeadphones,
+  FiHeart,
+  FiHome,
+  FiMonitor,
+  FiShoppingBag,
+  FiShoppingCart,
+  FiSmartphone,
+  FiTag,
+  FiTruck,
+  FiWatch,
+} from "react-icons/fi";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Container from "./Container";
+import SecHead from "./SecHead";
+import CategoryCard from "./CategoryCard";
 
+const categoryIconMap = {
+  beauty: FiHeart,
+  fragrances: FiDroplet,
+  furniture: FiHome,
+  groceries: FiShoppingCart,
+  "home-decoration": FiHome,
+  "kitchen-accessories": FiCoffee,
+  laptops: FiMonitor,
+  "mens-shirts": FiTag,
+  "mens-shoes": FiShoppingBag,
+  "mens-watches": FiWatch,
+  "mobile-accessories": FiSmartphone,
+  motorcycle: FiTruck,
+  "skin-care": FiDroplet,
+  smartphones: FiSmartphone,
+  "sports-accessories": FiGift,
+  sunglasses: FiCamera,
+  tablets: FiBox,
+};
+
+const fallbackIcons = [FiCamera, FiMonitor, FiHeadphones, FiShoppingBag];
+
+const CategorySkeleton = () => (
+  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6" aria-label="Loading categories" aria-busy="true">
+    {Array.from({ length: 6 }, (_, index) => (
+      <div key={index} className="flex h-36 animate-pulse flex-col items-center justify-center gap-4 border border-gray-200">
+        <div className="h-12 w-12 rounded-full bg-gray-200" />
+        <div className="h-4 w-20 rounded bg-gray-200" />
+      </div>
+    ))}
+  </div>
+);
 
 const Category = () => {
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
-    function SampleNextArrow({ onClick }) {
-        return (
-            <div
-                onClick={onClick}
-                className=" absolute -top-16 right-0 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-[#DB4444] hover:text-white"
-            >
-                <GoArrowRight className="text-2xl" />
-            </div>
-        );
-    }
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    setError(false);
 
+    fetch("https://dummyjson.com/products/categories", { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error("Could not load categories.");
+        return response.json();
+      })
+      .then((data) => setCategories(data))
+      .catch((requestError) => {
+        if (requestError.name !== "AbortError") setError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
 
-    function SamplePrevArrow({ onClick }) {
-        return (
-            <div
-                onClick={onClick}
-                className="absolute -top-16 right-14 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-[#DB4444] hover:text-white"
-            >
-                <GoArrowLeft className="text-2xl" />
-            </div>
-        );
-    }
+    return () => controller.abort();
+  }, [retryKey]);
 
-
-    const settings = {
-        dots: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 6,
-        slidesToScroll: 1,
-        arrows: true,
-        nextArrow: <SampleNextArrow />,
-        prevArrow: <SamplePrevArrow />,
-
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                }
-            },
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 2,
-                }
-            },
-            {
-                breakpoint: 640,
-                settings: {
-                    slidesToShow: 1,
-                }
-            }
-        ]
-    };
-
-
+  function SampleNextArrow({ onClick }) {
     return (
-        <>
+      <button
+        type="button"
+        aria-label="Next categories"
+        onClick={onClick}
+        className="absolute -top-16 right-0 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-primary hover:text-white"
+      >
+        <GoArrowRight className="text-2xl" />
+      </button>
+    );
+  }
 
-            <div className='mt-20 mb-35'>
+  function SamplePrevArrow({ onClick }) {
+    return (
+      <button
+        type="button"
+        aria-label="Previous categories"
+        onClick={onClick}
+        className="absolute -top-16 right-14 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-primary hover:text-white"
+      >
+        <GoArrowLeft className="text-2xl" />
+      </button>
+    );
+  }
 
-                <Container className='border-b border-[#00000046]'>
+  const settings = {
+    dots: false,
+    infinite: categories.length > 6,
+    speed: 500,
+    slidesToShow: Math.min(6, categories.length),
+    slidesToScroll: 1,
+    arrows: categories.length > 1,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+    responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 640, settings: { slidesToShow: 1 } },
+    ],
+  };
 
-                    <SecHead
-                        heading='Browse By Category'
-                        title="Categories"
-                    />
+  return (
+    <section className="mt-20 mb-35">
+      <Container className="border-b border-[#00000046] pb-16">
+        <SecHead heading="Browse By Category" title="Categories" />
 
-
-                    <div className='mt-10'>
-
-                        <Slider {...settings}>
-
-
-
-
-                            <div className='px-3'>
-                                <CategoryCard title='Camera'>
-                                    <svg className='mx-auto' width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_14080_1620)">
-                                            <path d="M11.6667 16.3334H14C15.2377 16.3334 16.4247 15.8417 17.2998 14.9665C18.175 14.0914 18.6667 12.9044 18.6667 11.6667C18.6667 11.0479 18.9125 10.4544 19.3501 10.0168C19.7877 9.57921 20.3812 9.33337 21 9.33337H35C35.6188 9.33337 36.2123 9.57921 36.6499 10.0168C37.0875 10.4544 37.3333 11.0479 37.3333 11.6667C37.3333 12.9044 37.825 14.0914 38.7002 14.9665C39.5753 15.8417 40.7623 16.3334 42 16.3334H44.3333C45.571 16.3334 46.758 16.825 47.6332 17.7002C48.5083 18.5754 49 19.7624 49 21V42C49 43.2377 48.5083 44.4247 47.6332 45.2999C46.758 46.175 45.571 46.6667 44.3333 46.6667H11.6667C10.429 46.6667 9.242 46.175 8.36683 45.2999C7.49167 44.4247 7 43.2377 7 42V21C7 19.7624 7.49167 18.5754 8.36683 17.7002C9.242 16.825 10.429 16.3334 11.6667 16.3334" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M28 37.3334C31.866 37.3334 35 34.1994 35 30.3334C35 26.4674 31.866 23.3334 28 23.3334C24.134 23.3334 21 26.4674 21 30.3334C21 34.1994 24.134 37.3334 28 37.3334Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_14080_1620">
-                                                <rect width="56" height="56" fill="white" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-
-                                </CategoryCard>
-                            </div>
-
-                            <div className='px-3'>
-                                <CategoryCard title='Desktop'>
-                                    <svg className='mx-auto' width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_14080_609)">
-                                            <path d="M35 14H21C17.134 14 14 17.134 14 21V35C14 38.866 17.134 42 21 42H35C38.866 42 42 38.866 42 35V21C42 17.134 38.866 14 35 14Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M21 42V49H35V42" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M21 14V7H35V14" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <line x1="24" y1="23" x2="24" y2="34" stroke="black" stroke-width="2" stroke-linecap="round" />
-                                            <line x1="28" y1="28" x2="28" y2="34" stroke="black" stroke-width="2" stroke-linecap="round" />
-                                            <line x1="32" y1="26" x2="32" y2="34" stroke="black" stroke-width="2" stroke-linecap="round" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_14080_609">
-                                                <rect width="56" height="56" fill="white" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-                                </CategoryCard>
-                            </div>
-
-
-
-                            <div className='px-3'>
-                                <CategoryCard title='Phone'>
-
-                                    <svg className='mx-auto' width="56" height="56" viewBox="0 0 56 56" fill="none">
-                                        <g clipPath="url(#clip0)">
-                                            <path
-                                                d="M38.9375 6.125H17.0625C15.5523 6.125 14.3281 7.34922 14.3281 8.85938V47.1406C14.3281 48.6508 15.5523 49.875 17.0625 49.875H38.9375C40.4477 49.875 41.6719 48.6508 41.6719 47.1406V8.85938C41.6719 7.34922 40.4477 6.125 38.9375 6.125Z"
-                                                stroke="black"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-
-                                            <path
-                                                d="M25.6666 7H31.1354"
-                                                stroke="black"
-                                                strokeWidth="3"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-
-                                            <path
-                                                d="M28 44.0052V44.0305"
-                                                stroke="black"
-                                                strokeWidth="2.5"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-
-                                            <line
-                                                x1="15.1666"
-                                                y1="39.8334"
-                                                x2="40.8333"
-                                                y2="39.8334"
-                                                stroke="black"
-                                                strokeWidth="2"
-                                            />
-
-                                        </g>
-
-                                        <defs>
-                                            <clipPath id="clip0">
-                                                <rect width="56" height="56" fill="white" />
-                                            </clipPath>
-                                        </defs>
-
-                                    </svg>
-
-
-                                </CategoryCard>
-                            </div>
-
-
-
-                            <div className='px-3'>
-                                <CategoryCard title='Desktop'>
-                                    <svg className='mx-auto' width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_14080_609)">
-                                            <path d="M35 14H21C17.134 14 14 17.134 14 21V35C14 38.866 17.134 42 21 42H35C38.866 42 42 38.866 42 35V21C42 17.134 38.866 14 35 14Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M21 42V49H35V42" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M21 14V7H35V14" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <line x1="24" y1="23" x2="24" y2="34" stroke="black" stroke-width="2" stroke-linecap="round" />
-                                            <line x1="28" y1="28" x2="28" y2="34" stroke="black" stroke-width="2" stroke-linecap="round" />
-                                            <line x1="32" y1="26" x2="32" y2="34" stroke="black" stroke-width="2" stroke-linecap="round" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_14080_609">
-                                                <rect width="56" height="56" fill="white" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-                                </CategoryCard>
-                            </div>
-
-
-                            <div className='px-3'>
-                                <CategoryCard title='SmartWatch'>
-                                    <svg className='mx-auto' width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_14080_684)">
-                                            <path d="M16.3333 30.3334H14C11.4227 30.3334 9.33331 32.4227 9.33331 35V42C9.33331 44.5774 11.4227 46.6667 14 46.6667H16.3333C18.9106 46.6667 21 44.5774 21 42V35C21 32.4227 18.9106 30.3334 16.3333 30.3334Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M42 30.3334H39.6667C37.0893 30.3334 35 32.4227 35 35V42C35 44.5774 37.0893 46.6667 39.6667 46.6667H42C44.5773 46.6667 46.6667 44.5774 46.6667 42V35C46.6667 32.4227 44.5773 30.3334 42 30.3334Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M9.33331 35V28C9.33331 23.0493 11.3 18.3014 14.8007 14.8007C18.3013 11.3 23.0493 9.33337 28 9.33337C32.9507 9.33337 37.6986 11.3 41.1993 14.8007C44.7 18.3014 46.6666 23.0493 46.6666 28V35" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_14080_684">
-                                                <rect width="56" height="56" fill="white" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-
-                                </CategoryCard>
-                            </div>
-
-
-                            <div className='px-3'>
-                                <CategoryCard title='Camera'>
-                                    <svg className='mx-auto' width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_14080_1620)">
-                                            <path d="M11.6667 16.3334H14C15.2377 16.3334 16.4247 15.8417 17.2998 14.9665C18.175 14.0914 18.6667 12.9044 18.6667 11.6667C18.6667 11.0479 18.9125 10.4544 19.3501 10.0168C19.7877 9.57921 20.3812 9.33337 21 9.33337H35C35.6188 9.33337 36.2123 9.57921 36.6499 10.0168C37.0875 10.4544 37.3333 11.0479 37.3333 11.6667C37.3333 12.9044 37.825 14.0914 38.7002 14.9665C39.5753 15.8417 40.7623 16.3334 42 16.3334H44.3333C45.571 16.3334 46.758 16.825 47.6332 17.7002C48.5083 18.5754 49 19.7624 49 21V42C49 43.2377 48.5083 44.4247 47.6332 45.2999C46.758 46.175 45.571 46.6667 44.3333 46.6667H11.6667C10.429 46.6667 9.242 46.175 8.36683 45.2999C7.49167 44.4247 7 43.2377 7 42V21C7 19.7624 7.49167 18.5754 8.36683 17.7002C9.242 16.825 10.429 16.3334 11.6667 16.3334" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M28 37.3334C31.866 37.3334 35 34.1994 35 30.3334C35 26.4674 31.866 23.3334 28 23.3334C24.134 23.3334 21 26.4674 21 30.3334C21 34.1994 24.134 37.3334 28 37.3334Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_14080_1620">
-                                                <rect width="56" height="56" fill="white" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-
-                                </CategoryCard>
-                            </div>
-
-                            <div className='px-3'>
-                                <CategoryCard title='Gaming'>
-                                    <svg className='mx-auto' width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_14080_817)">
-                                            <path d="M46.6667 14H9.33335C6.75602 14 4.66669 16.0893 4.66669 18.6667V37.3333C4.66669 39.9107 6.75602 42 9.33335 42H46.6667C49.244 42 51.3334 39.9107 51.3334 37.3333V18.6667C51.3334 16.0893 49.244 14 46.6667 14Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M14 28H23.3333M18.6667 23.3334V32.6667" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M35 25.6666V25.6908" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M42 30.3333V30.3574" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_14080_817">
-                                                <rect width="56" height="56" fill="white" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-
-                                </CategoryCard>
-                            </div>
-
-
-                            <div className='px-3'>
-                                <CategoryCard title='HeadPhones'>
-                                    <svg className='mx-auto' width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_14080_684)">
-                                            <path d="M16.3333 30.3334H14C11.4227 30.3334 9.33331 32.4227 9.33331 35V42C9.33331 44.5774 11.4227 46.6667 14 46.6667H16.3333C18.9106 46.6667 21 44.5774 21 42V35C21 32.4227 18.9106 30.3334 16.3333 30.3334Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M42 30.3334H39.6667C37.0893 30.3334 35 32.4227 35 35V42C35 44.5774 37.0893 46.6667 39.6667 46.6667H42C44.5773 46.6667 46.6667 44.5774 46.6667 42V35C46.6667 32.4227 44.5773 30.3334 42 30.3334Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M9.33331 35V28C9.33331 23.0493 11.3 18.3014 14.8007 14.8007C18.3013 11.3 23.0493 9.33337 28 9.33337C32.9507 9.33337 37.6986 11.3 41.1993 14.8007C44.7 18.3014 46.6666 23.0493 46.6666 28V35" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_14080_684">
-                                                <rect width="56" height="56" fill="white" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-                                </CategoryCard>
-                            </div>
-
-
-                            <div className='px-3'>
-                                <CategoryCard title='Gaming'>
-                                    <svg className='mx-auto' width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_14080_817)">
-                                            <path d="M46.6667 14H9.33335C6.75602 14 4.66669 16.0893 4.66669 18.6667V37.3333C4.66669 39.9107 6.75602 42 9.33335 42H46.6667C49.244 42 51.3334 39.9107 51.3334 37.3333V18.6667C51.3334 16.0893 49.244 14 46.6667 14Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M14 28H23.3333M18.6667 23.3334V32.6667" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M35 25.6666V25.6908" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M42 30.3333V30.3574" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_14080_817">
-                                                <rect width="56" height="56" fill="white" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-
-                                </CategoryCard>
-                            </div>
-
-
-                        </Slider>
-
-
-                    </div>
-
-
-                </Container>
-
+        <div className="mt-10">
+          {loading ? (
+            <CategorySkeleton />
+          ) : error ? (
+            <div className="flex min-h-36 flex-col items-center justify-center gap-3 border border-gray-200 text-center">
+              <p className="text-gray-600">Categories could not be loaded.</p>
+              <button
+                type="button"
+                onClick={() => setRetryKey((current) => current + 1)}
+                className="rounded-sm bg-primary px-5 py-2 font-medium text-white"
+              >
+                Try Again
+              </button>
             </div>
+          ) : categories.length === 0 ? (
+            <p className="py-12 text-center text-gray-500">No categories available.</p>
+          ) : (
+            <Slider {...settings}>
+              {categories.map((category, index) => {
+                const Icon = categoryIconMap[category.slug] || fallbackIcons[index % fallbackIcons.length];
+                return (
+                  <div key={category.slug} className="px-3">
+                    <CategoryCard
+                      title={category.name}
+                      to={`/ShopByCategory?category=${encodeURIComponent(category.slug)}`}
+                    >
+                      <Icon className="mx-auto h-12 w-12" aria-hidden="true" />
+                    </CategoryCard>
+                  </div>
+                );
+              })}
+            </Slider>
+          )}
+        </div>
 
-        </>
-    )
-}
+        <div className="mt-5 flex justify-center">
+          <button
+            type="button"
+            onClick={() => navigate("/ShopByCategory")}
+            className="rounded-sm bg-primary px-8 py-3 font-medium text-white transition-opacity hover:opacity-90"
+          >
+            View All Categories
+          </button>
+        </div>
+      </Container>
+    </section>
+  );
+};
 
-export default Category
-
-
-
-
-
-
-
-
-
-
-
+export default Category;

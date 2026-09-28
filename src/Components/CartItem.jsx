@@ -1,16 +1,21 @@
 import React from "react";
-import Gamepad from "../assets/Gamepad-Cart-Small.png";
 import {
   MdKeyboardArrowUp,
   MdKeyboardArrowDown,
 } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
 import { useDispatch } from "react-redux";
-import { RemoveReducer } from "../Slices/ProductSlice";
+import {
+  DecreaseCartQuantity,
+  IncreaseCartQuantity,
+  RemoveReducer,
+} from "../Slices/ProductSlice";
 
 
-const CartItem = ({ subTotal, imgScr, price, title, id }) => {
+const CartItem = ({ imgScr, price, title, id, quantity = 1 }) => {
   let dispatch = useDispatch()
+  const itemQuantity = Number(quantity) || 1
+
   return (
     <div className="grid grid-cols-4 items-center py-6 px-10 rounded-sm shadow-sm mt-10">
 
@@ -35,17 +40,31 @@ const CartItem = ({ subTotal, imgScr, price, title, id }) => {
 
       <div className="border rounded-sm py-1 px-3 w-fit">
         <div className="flex items-center gap-3">
-          <span>01</span>
+          <span>{String(itemQuantity).padStart(2, "0")}</span>
 
           <div className="flex flex-col">
-            <MdKeyboardArrowUp className="cursor-pointer" />
-            <MdKeyboardArrowDown className="cursor-pointer" />
+            <button
+              type="button"
+              aria-label={`Increase quantity for ${title}`}
+              onClick={() => dispatch(IncreaseCartQuantity({ id }))}
+              className="cursor-pointer"
+            >
+              <MdKeyboardArrowUp />
+            </button>
+            <button
+              type="button"
+              aria-label={`Decrease quantity for ${title}`}
+              onClick={() => dispatch(DecreaseCartQuantity({ id }))}
+              className="cursor-pointer"
+            >
+              <MdKeyboardArrowDown />
+            </button>
           </div>
         </div>
       </div>
 
 
-      <h4>${subTotal}</h4>
+      <h4>${(Number(price) * itemQuantity).toFixed(2)}</h4>
 
     </div>
   );

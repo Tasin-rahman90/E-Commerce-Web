@@ -3,34 +3,34 @@ import Container from './Container'
 import Slider from "react-slick";
 import Card from './Card';
 import SecHead from './SecHead';
-import dryFood from '../assets/dryFood.png'
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
-import Canon from '../assets/Canon.png'
-import laptop from '../assets/laptop.png'
-import KYbord from '../assets/2kybord.png'
 import Btn from './Btn';
 
-const Explore = () => {
+const Explore = ({ products = [] }) => {
   function SampleNextArrow({ onClick }) {
     return (
-      <div
+      <button
+        type="button"
+        aria-label="Next explored products"
         onClick={onClick}
-        className="absolute -top-16 right-0 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-[#DB4444] hover:text-white"
+        className="absolute -top-16 right-0 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-primary hover:text-white"
       >
         <GoArrowRight className="text-2xl" />
-      </div>
+      </button>
     );
   }
 
 
   function SamplePrevArrow({ onClick }) {
     return (
-      <div
+      <button
+        type="button"
+        aria-label="Previous explored products"
         onClick={onClick}
-        className="absolute -top-16 right-14 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-[#DB4444] hover:text-white"
+        className="absolute -top-16 right-14 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#F5F5F5] transition-all duration-300 hover:bg-primary hover:text-white"
       >
         <GoArrowLeft className="text-2xl" />
-      </div>
+      </button>
     );
   }
 
@@ -57,156 +57,30 @@ const Explore = () => {
           />
           <div className='py-15'>
             <Slider {...settings}>
-
-              <div className='space-y-15'>
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={KYbord}
-                />
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={dryFood}
-                />
-              </div>
-              <div className='space-y-15'>
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={Canon}
-                />
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={laptop}
-                />
-              </div>
-              <div className='space-y-15'>
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={dryFood}
-                />
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={dryFood}
-                />
-              </div>
-              <div className='space-y-15'>
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={laptop}
-                />
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={Canon}
-                />
-              </div>
-              <div className='space-y-15'>
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={KYbord}
-                />
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={Canon}
-                />
-              </div>
-              <div className='space-y-15'>
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={laptop}
-                />
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={dryFood}
-                />
-              </div>
-              <div className='space-y-15'>
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={KYbord}
-                />
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={laptop}
-                />
-              </div>
-              <div className='space-y-15'>
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={KYbord}
-                />
-                <Card
-                  parcent='90%'
-                  modle='Breed Dry Dog Food'
-                  discountPrice='209$'
-                  regularPrice='986'
-                  rate='90'
-                  itemImg={dryFood}
-                />
-              </div>
+              {products.slice(0, 16).map((product, index) => (
+                <div className='space-y-15' key={product.id}>
+                  {products.slice(index, index + 2).map((item) => (
+                    <Card
+                      key={item.id}
+                      id={item.id}
+                      productDeatils={item}
+                      parcent={item.discountPercentage}
+                      modle={item.title}
+                      discountPrice={`$${item.price.toFixed(2)}`}
+                      regularPrice={`$${(
+                        item.price / (1 - item.discountPercentage / 100)
+                      ).toFixed(2)}`}
+                      rate={item.rating}
+                      itemImg={item.thumbnail}
+                    />
+                  ))}
+                </div>
+              ))}
 
             </Slider>
           </div>
           <div className="flex justify-center mt-10">
-            <Btn text="View All Products" />
+            <Btn text="View All Products" to="/ShopByCategory" />
           </div>
         </Container>
       </div>

@@ -1,10 +1,14 @@
 import React from "react";
 import { Rate } from "antd";
-import { IoIosHeartEmpty } from "react-icons/io";
+import { IoIosHeart, IoIosHeartEmpty } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { CartReducer } from "../Slices/ProductSlice";
+import {
+  AddToWishlist,
+  CartReducer,
+  RemoveFromWishlist,
+} from "../Slices/ProductSlice";
 import { toast, Bounce } from "react-toastify";
 
 const Card = ({
@@ -18,6 +22,8 @@ const Card = ({
   productDeatils,
 }) => {
   const data = useSelector((state) => state.products.cart);
+  const wishlist = useSelector((state) => state.products.wishlist);
+  const isWishlisted = wishlist.some((item) => item.id === id);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -64,6 +70,17 @@ const Card = ({
     notify(false);
   };
 
+  const handleWishlistToggle = (event) => {
+    event.stopPropagation();
+    if (isWishlisted) {
+      dispatch(RemoveFromWishlist({ id }));
+      toast.info("Product removed from your wishlist.");
+    } else {
+      dispatch(AddToWishlist(productDeatils));
+      toast.success("Product added to your wishlist.");
+    }
+  };
+
   return (
     <div className="w-67.5 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-lg">
       <div className="relative group py-8.75 px-10 bg-[#F5F5F5] rounded-sm overflow-hidden">
@@ -81,12 +98,15 @@ const Card = ({
         </div>
 
         <div className="absolute top-3 right-3 space-y-2">
-          <div
+          <button
+            type="button"
+            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             className="text-2xl p-2.5 bg-white rounded-full transition-all duration-300 hover:bg-black hover:text-white hover:scale-110"
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleWishlistToggle}
           >
-            <IoIosHeartEmpty />
-          </div>
+            {isWishlisted ? <IoIosHeart className="text-primary" /> : <IoIosHeartEmpty />}
+          </button>
 
           <div
             className="text-2xl p-2.5 bg-white rounded-full transition-all duration-300 hover:bg-black hover:text-white hover:scale-110"
@@ -117,7 +137,7 @@ const Card = ({
       </div>
 
       <div className="flex gap-2">
-        <Rate allowHalf defaultValue={2.5} />
+        <Rate allowHalf value={Number(rate) || 0} disabled />
 
         <h4 className="text-[#0000006c]">({rate})</h4>
       </div>

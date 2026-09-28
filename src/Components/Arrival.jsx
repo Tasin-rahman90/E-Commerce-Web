@@ -9,6 +9,7 @@ import Services from './Services'
 import car from '../assets/car.png'
 import customer from '../assets/Customer.png'
 import GUARANTEE from '../assets/Services (2).png'
+import { Link } from 'react-router'
 
 
 
@@ -33,7 +34,7 @@ const Arrival = () => {
                             <div className='pt-111.5 pl-8'>
                                 <h2 className='text-[24px] font-inter'>PlayStation 5</h2>
                                 <p className='text-[14px] font-inter py-4'>Black and White version of the PS5 coming out on sale.</p>
-                                <h3 className='font-inter border-b border-[#ffffff62] w-20.25 '>Shop Now</h3>
+                                <Link to="/search?q=playstation" className='inline-block font-inter border-b border-[#ffffff62] w-20.25 hover:border-white'>Shop Now</Link>
                             </div>
                         </div>
 
@@ -50,7 +51,7 @@ const Arrival = () => {
                                 <div className='pt-34.5 pl-6'>
                                     <h2 className='text-[24px] font-inter'>PlayStation 5</h2>
                                     <p className='text-[14px] font-inter py-4'>Black and White version of the PS5 coming out on sale.</p>
-                                    <h3 className='font-inter border-b border-[#ffffff62] w-20.25 '>Shop Now</h3>
+                                    <Link to="/search?q=playstation" className='inline-block font-inter border-b border-[#ffffff62] w-20.25 hover:border-white'>Shop Now</Link>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +66,7 @@ const Arrival = () => {
                                 <div className='text-white pt-42 pl-6 '>
                                     <h2 className='text-[24px] font-inter'>Speakers</h2>
                                     <p className='text-[14px] font-inter py-0.1'>Amazon wireless speakers</p>
-                                    <h3 className='font-inter border-b border-[#ffffff62] w-20.25 '>Shop Now</h3>
+                                    <Link to="/search?q=speaker" className='inline-block font-inter border-b border-[#ffffff62] w-20.25 hover:border-white'>Shop Now</Link>
                                 </div>
                             </div>
 
@@ -77,7 +78,7 @@ const Arrival = () => {
                                 <div className='text-white pt-42 pl-6 '>
                                     <h2 className='text-[24px] font-inter'>Perfume</h2>
                                     <p className='text-[14px] font-inter py-0.1'>GUCCI INTENSE OUD EDP</p>
-                                    <h3 className='font-inter border-b border-[#ffffff62] w-20.25 '>Shop Now</h3>
+                                    <Link to="/ShopByCategory?category=fragrances" className='inline-block font-inter border-b border-[#ffffff62] w-20.25 hover:border-white'>Shop Now</Link>
                                 </div>
                             </div>
 
