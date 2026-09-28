@@ -3,7 +3,7 @@ import React from 'react'
 const Services = ({IMG,headLine,title}) => {
     return (
         <>
-            <div className='w-70'>
+            <div className='mx-auto w-full max-w-70'>
                 <div className='flex justify-center items-center'>
                     <img src={IMG} alt="" />
                 </div>

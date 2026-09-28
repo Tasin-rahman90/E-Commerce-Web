@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FiMapPin, FiX } from "react-icons/fi";
+import { getDiscountedPrice } from "../Utils/price";
 
 const fieldClassName = "mt-1 w-full rounded-sm border border-gray-300 px-3 py-2.5 outline-none focus:border-primary focus:ring-1 focus:ring-primary";
 
 const CheckoutModal = ({ items, total, onClose, onSubmit, initialPostalCode = "" }) => {
+  const closeButtonRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -14,6 +18,24 @@ const CheckoutModal = ({ items, total, onClose, onSubmit, initialPostalCode = ""
     deliveryNotes: "",
   });
   const [phoneError, setPhoneError] = useState("");
+
+  useEffect(() => {
+    const previouslyFocused = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") onCloseRef.current();
+    };
+
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", closeOnEscape);
+    closeButtonRef.current?.focus();
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+      if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus();
+    };
+  }, []);
 
   const updateField = (event) => {
     const { name, value } = event.target;
@@ -34,12 +56,12 @@ const CheckoutModal = ({ items, total, onClose, onSubmit, initialPostalCode = ""
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overscroll-contain bg-black/60 p-3 sm:p-6">
       <section
         role="dialog"
         aria-modal="true"
         aria-labelledby="checkout-title"
-        className="max-h-[94vh] w-full max-w-5xl overflow-y-auto rounded-sm bg-white shadow-2xl"
+        className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl overflow-y-auto overscroll-contain rounded-sm bg-white shadow-2xl sm:max-h-[94vh]"
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-5 py-4 sm:px-8">
           <div>
@@ -48,6 +70,7 @@ const CheckoutModal = ({ items, total, onClose, onSubmit, initialPostalCode = ""
           </div>
           <button
             type="button"
+            ref={closeButtonRef}
             onClick={onClose}
             aria-label="Close checkout"
             className="grid h-10 w-10 place-items-center rounded-full transition-colors hover:bg-gray-100"
@@ -183,7 +206,7 @@ const CheckoutModal = ({ items, total, onClose, onSubmit, initialPostalCode = ""
                         <p className="text-gray-500">Qty: {quantity}</p>
                       </div>
                     </div>
-                    <span className="shrink-0">${(Number(item.price) * quantity).toFixed(2)}</span>
+                    <span className="shrink-0">${(getDiscountedPrice(item) * quantity).toFixed(2)}</span>
                   </div>
                 );
               })}

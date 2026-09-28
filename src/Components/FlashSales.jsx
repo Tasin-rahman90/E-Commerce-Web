@@ -8,6 +8,7 @@ import SecHead from "./SecHead";
 import CountDown from "./CountDown";
 import Card from "./Card";
 import Btn from "./Btn";
+import { getDiscountedPrice } from "../Utils/price";
 
 const FlashSales = ({ products = [] }) => {
 
@@ -64,9 +65,9 @@ const FlashSales = ({ products = [] }) => {
   }, []);
 
   return (
-    <div className="mt-38.5">
+    <div className="mt-20 lg:mt-38.5">
       <Container className="border-b border-[#0000004f] pb-16">
-        <div className="flex items-center gap-20">
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center lg:gap-20">
           <SecHead title="Today's" heading="Flash Sales" />
 
           <CountDown
@@ -83,14 +84,11 @@ const FlashSales = ({ products = [] }) => {
               <div className="px-3" key={product.id}>
                 <Card
                   id={product.id}
-                  productDeatils={product}
-                  parcent={product.discountPercentage}
+                  productDetails={product}
+                  percent={product.discountPercentage}
                   itemImg={product.thumbnail}
-                  modle={product.title}
-                  discountPrice={`$${product.price.toFixed(2)}`}
-                  regularPrice={`$${(
-                    product.price / (1 - product.discountPercentage / 100)
-                  ).toFixed(2)}`}
+                  title={product.title}
+                  discountPrice={getDiscountedPrice(product)}
                   rate={product.rating}
                 />
               </div>

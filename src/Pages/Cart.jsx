@@ -8,13 +8,14 @@ import { FiShoppingBag } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { ClearCartReducer } from "../Slices/ProductSlice";
 import CheckoutModal from "../Components/CheckoutModal";
+import { getDiscountedPrice } from "../Utils/price";
 const Cart = () => {
 
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const dispatch = useDispatch()
   const data = useSelector(state => state.products.cart)
   const cartTotal = data.reduce(
-    (total, item) => total + Number(item.price) * (Number(item.quantity) || 1),
+    (total, item) => total + getDiscountedPrice(item) * (Number(item.quantity) || 1),
     0
   )
 
@@ -46,7 +47,7 @@ const Cart = () => {
           <div className="pt-20">
             {data.length > 0 ? (
               <>
-                <div className="grid grid-cols-4 items-center py-6 px-10 rounded-sm shadow-sm">
+                <div className="hidden grid-cols-4 items-center rounded-sm py-6 px-10 shadow-sm md:grid">
                   <h4>Product</h4>
                   <h4>Price</h4>
                   <h4>Quantity</h4>
@@ -55,11 +56,7 @@ const Cart = () => {
                 {data.map((item) => (
                   <CartItem
                     key={item.id}
-                    imgScr={item.thumbnail}
-                    id={item.id}
-                    title={item.title}
-                    price={item.price}
-                    quantity={item.quantity}
+                    product={item}
                   />
                 ))}
                 <div className="mt-8 flex justify-end border-t border-gray-200 pt-6">

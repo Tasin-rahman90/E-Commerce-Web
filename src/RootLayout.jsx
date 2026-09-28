@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet } from 'react-router'
+import { Outlet, ScrollRestoration } from 'react-router'
 import Header from './Components/Header'
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
@@ -10,6 +10,7 @@ const RootLayout = () => {
             <Header />
             <Navbar/>
             <Outlet />
+            <ScrollRestoration />
             <Footer/>
         </div>
     )

@@ -51,7 +51,7 @@ const HomeSkeleton = () => (
 
     <main>
       <p className="px-4 pt-6 text-center text-sm text-gray-500" role="status">
-        Loading products from the API. The skeleton will stay until the data is ready.
+       
       </p>
     <Container>
       <div className="mt-6 flex flex-col gap-6 lg:mt-10 lg:flex-row">

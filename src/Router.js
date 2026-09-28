@@ -1,3 +1,4 @@
+import React from "react";
 import { createBrowserRouter } from "react-router";
 import Home from "./Pages/Home";
 import RootLayout from "./RootLayout";
@@ -10,12 +11,15 @@ import Contact from "./Pages/Contact";
 import About from "./Pages/About";
 import SignUp from "./Pages/SignUp";
 import MyAccount from "./Pages/MyAccount";
+import NotFound from "./Pages/NotFound";
+import RouteError from "./Pages/RouteError";
 
 
 export const router = createBrowserRouter([
     {
     path: "/",
     Component: RootLayout,
+    errorElement: React.createElement(RouteError),
     children: [
       { index: true, Component: Home },
       { path: "ShopByCategory", Component: ShopByCategory },
@@ -28,6 +32,7 @@ export const router = createBrowserRouter([
       { path: "signup", Component: SignUp },
       { path: "login", Component: SignUp },
       { path: "account", Component: MyAccount },
+      { path: "*", Component: NotFound },
     ],
   },
 ]);

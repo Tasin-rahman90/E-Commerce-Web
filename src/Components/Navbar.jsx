@@ -9,7 +9,9 @@ import { FiUser } from "react-icons/fi";
 import { NavLink, useLocation, useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { searchProducts } from '../Utils/productSearch';
-import { getCurrentAccount, subscribeToAccountChanges } from '../Utils/localAccount';
+import { getDiscountedPrice } from '../Utils/price';
+import { getCurrentAccount, signOutLocalAccount, subscribeToAccountChanges } from '../Utils/localAccount';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const navigate = useNavigate()
@@ -114,6 +116,12 @@ const Navbar = () => {
     setDropdownOpen(false)
     navigate(`/productDetails/${product.id}`)
   }
+
+  const handleLogout = () => {
+    signOutLocalAccount();
+    toast.info('You have been logged out.');
+    navigate('/login');
+  }
  
   return (
     <>
@@ -143,7 +151,14 @@ const Navbar = () => {
               </li>
 
               <li className="cursor-pointer border-b-2 border-transparent hover:border-black duration-200">
-                <NavLink to="/signup" className={({ isActive }) => isActive ? "border-b border-black" : ""}>Sign Up</NavLink>
+                {currentAccount ? (
+                  <span className="flex items-center gap-4">
+                    <NavLink to="/account" className={({ isActive }) => isActive ? "border-b border-black" : ""}>Account</NavLink>
+                    <button type="button" onClick={handleLogout} className="hover:underline">Logout</button>
+                  </span>
+                ) : (
+                  <NavLink to="/signup" className={({ isActive }) => isActive ? "border-b border-black" : ""}>Sign Up</NavLink>
+                )}
               </li>
 
             </ul>
@@ -254,7 +269,7 @@ const Navbar = () => {
                               >
                                 <img src={product.thumbnail} alt="" className="h-11 w-11 rounded-sm bg-gray-100 object-contain" />
                                 <span className="min-w-0 flex-1 truncate text-sm font-medium">{product.title}</span>
-                                <span className="shrink-0 text-sm text-gray-500">${Number(product.price).toFixed(2)}</span>
+                                <span className="shrink-0 text-sm text-gray-500">${getDiscountedPrice(product).toFixed(2)}</span>
                               </button>
                             </li>
                           ))}
@@ -291,13 +306,13 @@ const Navbar = () => {
                   )}
                 </NavLink>
 
-                <div onClick={()=> navigate("/cartPage")} className="relative cursor-pointer">
+                <NavLink to="/cartPage" aria-label="Open cart" title="Open cart" className="relative">
                   <FiShoppingCart className="w-7 h-7 md:w-8 md:h-8" />
 
                   <span className="absolute -top-2 -right-2 flex items-center justify-center min-w-5 h-5 px-1 bg-primary text-white text-xs font-medium rounded-full">
                     {data.length}
                   </span>
-                </div>
+                </NavLink>
               </div>
 
             </div>

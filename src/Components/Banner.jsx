@@ -10,14 +10,30 @@ import "slick-carousel/slick/slick-theme.css";
 const Banner = () => {
     const [categories, setCategories] = useState([])
     const [categoriesLoading, setCategoriesLoading] = useState(true)
+    const [categoriesError, setCategoriesError] = useState(false)
+    const [retryKey, setRetryKey] = useState(0)
 
     useEffect(() => {
-        fetch('https://dummyjson.com/products/categories')
-            .then((response) => response.json())
-            .then((data) => setCategories(data))
-            .catch((error) => console.log(error))
-            .finally(() => setCategoriesLoading(false))
-    }, [])
+        const controller = new AbortController()
+        setCategoriesLoading(true)
+        setCategoriesError(false)
+        fetch('https://dummyjson.com/products/categories', { signal: controller.signal })
+            .then((response) => {
+                if (!response.ok) throw new Error('Categories could not be loaded.')
+                return response.json()
+            })
+            .then((data) => {
+                if (!Array.isArray(data)) throw new Error('Invalid category response.')
+                setCategories(data)
+            })
+            .catch((error) => {
+                if (error.name !== 'AbortError') setCategoriesError(true)
+            })
+            .finally(() => {
+                if (!controller.signal.aborted) setCategoriesLoading(false)
+            })
+        return () => controller.abort()
+    }, [retryKey])
 
     var settings = {
         dots: true,
@@ -34,13 +50,16 @@ const Banner = () => {
                 <ul className='absolute bottom-7.5 left-[50%] translate-x-[-50%]'> {dots} </ul>
             </div>
         ),
-        customPaging: i => (
+        customPaging: () => (
             <div
                 className='w-3.5 h-3.5 bg-[#828282] rounded-full'
             >
 
             </div>
-        )
+        ),
+        responsive: [
+            { breakpoint: 570, settings: { arrows: false } },
+        ],
     };
 
     return (
@@ -60,6 +79,11 @@ const Banner = () => {
                                     <span className="h-3 w-3 animate-pulse rounded-sm bg-gray-200" />
                                 </li>
                             ))
+                            : categoriesError
+                                ? <li className="space-y-2 text-sm text-gray-600">
+                                    <p>Categories could not be loaded.</p>
+                                    <button type="button" onClick={() => setRetryKey((current) => current + 1)} className="text-primary underline">Try again</button>
+                                </li>
                             : categories.slice(0, 8).map((item) => (
                                 <li key={item.slug}>
                                     <Link
@@ -78,7 +102,7 @@ const Banner = () => {
 
 
                 <div className="w-full lg:w-[70%] lg:ml-6 xl:ml-12">
-                    <Slider {...settings}>
+                    <Slider {...settings} className="banner-carousel">
                         {[1, 2, 3, 4].map((_, index) => (
                             <div className="w-full" key={index}>
                                 <img src={BannerImg} alt={`Banner slide ${index + 1}`} />

@@ -10,6 +10,7 @@ import {
   ClearWishlist,
   RemoveFromWishlist,
 } from "../Slices/ProductSlice";
+import { getDiscountedPrice } from "../Utils/price";
 
 const WishlistSkeleton = () => (
   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4" aria-label="Loading wishlist" aria-busy="true">
@@ -28,6 +29,7 @@ const Wishlist = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const wishlist = useSelector((state) => state.products.wishlist);
+  const cart = useSelector((state) => state.products.cart);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -42,9 +44,15 @@ const Wishlist = () => {
   };
 
   const moveAllToBag = () => {
-    wishlist.forEach((item) => dispatch(CartReducer(item)));
+    const cartIds = new Set(cart.map((item) => item.id));
+    const newItems = wishlist.filter((item) => !cartIds.has(item.id));
+    newItems.forEach((item) => dispatch(CartReducer(item)));
     dispatch(ClearWishlist());
-    toast.success(`${wishlist.length} product(s) moved to your bag.`);
+    if (newItems.length > 0) {
+      toast.success(`${newItems.length} product(s) moved to your bag.`);
+    } else {
+      toast.info("All wishlist products are already in your bag.");
+    }
     navigate("/cartPage");
   };
 
@@ -97,7 +105,12 @@ const Wishlist = () => {
                   </div>
                   <div className="p-4">
                     <h2 className="truncate font-medium" title={item.title}>{item.title}</h2>
-                    <p className="mt-2 font-medium text-primary">${Number(item.price).toFixed(2)}</p>
+                    <div className="mt-2 flex gap-3 font-medium">
+                      <p className="text-primary">${getDiscountedPrice(item).toFixed(2)}</p>
+                      {Number(item.discountPercentage) > 0 && (
+                        <p className="text-gray-500 line-through">${Number(item.price).toFixed(2)}</p>
+                      )}
+                    </div>
                     <button
                       type="button"
                       onClick={() => moveItemToBag(item)}

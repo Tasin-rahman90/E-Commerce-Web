@@ -28,7 +28,9 @@ const Experience = ({ className }) => {
 
             <div
                 className={`${className}
-                h-125
+                min-h-100
+                h-auto
+                lg:h-125
                 bg-cover
                 bg-center
                 bg-no-repeat
@@ -38,19 +40,19 @@ const Experience = ({ className }) => {
                 }}
             >
 
-                <div className='py-17.5 pl-14'>
+                <div className='px-4 py-10 sm:px-8 sm:py-14 lg:py-17.5 lg:pl-14'>
 
                     <p className='text-[#00FF66] text-[16px] font-semibold'>
                         Categories
                     </p>
 
 
-                    <h2 className='py-8 leading-15 font-inter text-[48px] font-semibold text-white w-110.75'>
+                    <h2 className='w-full max-w-110.75 py-6 font-inter text-3xl font-semibold leading-tight text-white sm:py-8 sm:text-4xl lg:text-[48px] lg:leading-15'>
                         Enhance Your Music Experience
                     </h2>
 
 
-                    <div className='flex gap-6'>
+                    <div className='flex flex-wrap gap-3 sm:gap-6'>
 
 
                         <TimeBox 
@@ -77,7 +79,7 @@ const Experience = ({ className }) => {
                     </div>
 
 
-                    <Link to="/ShopByCategory?category=mobile-accessories" className='inline-block text-white bg-[#00FF66] py-4 px-12 rounded-sm mt-10 transition-opacity hover:opacity-90'>
+                    <Link to="/ShopByCategory?category=mobile-accessories" className='mt-8 inline-block rounded-sm bg-[#00FF66] px-8 py-4 text-white transition-opacity hover:opacity-90 sm:mt-10 sm:px-12'>
                         Buy Now!
                     </Link>
 

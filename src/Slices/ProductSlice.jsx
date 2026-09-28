@@ -1,12 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const readStoredArray = (key) => {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || "null");
+    return Array.isArray(value) ? value : [];
+  } catch {
+    return [];
+  }
+};
+
 export const ProductSlice = createSlice({
   name: "products",
 
   initialState: {
     value: [],
-    cart: localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [],
-    wishlist: localStorage.getItem("wishlist") ? JSON.parse(localStorage.getItem("wishlist")) : [],
+    cart: readStoredArray("cart"),
+    wishlist: readStoredArray("wishlist"),
   },
 
   reducers: {
@@ -14,11 +23,17 @@ export const ProductSlice = createSlice({
       state.value = action.payload;
     },
     CartReducer: (state, action) => {
-      const exist = state.cart.find((item) => item.id === action.payload.id);
+      const product = action.payload.product || action.payload;
+      const quantity = Math.max(1, Math.floor(Number(action.payload.quantity) || 1));
+      const exist = state.cart.find((item) => item.id === product.id);
+      const previousQuantity = exist ? (Number(exist.quantity) || 1) : 0;
+      const stock = product.stock == null ? Infinity : Number(product.stock);
+      const nextQuantity = Math.min(previousQuantity + quantity, Number.isFinite(stock) ? stock : Infinity);
+      if (nextQuantity <= previousQuantity) return;
       if (exist) {
-        exist.quantity = (exist.quantity || 1) + 1;
+        exist.quantity = nextQuantity;
       } else {
-        state.cart.push({ ...action.payload, quantity: 1 });
+        state.cart.push({ ...product, quantity: nextQuantity });
       }
       localStorage.setItem("cart", JSON.stringify(state.cart));
     },
@@ -41,7 +56,10 @@ export const ProductSlice = createSlice({
     },
     IncreaseCartQuantity: (state, action) => {
       const item = state.cart.find((product) => product.id === action.payload.id);
-      if (item) item.quantity = (item.quantity || 1) + 1;
+      if (item) {
+        const stock = item.stock == null ? Infinity : Number(item.stock);
+        item.quantity = Math.min((Number(item.quantity) || 1) + 1, Number.isFinite(stock) ? stock : Infinity);
+      }
       localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     DecreaseCartQuantity: (state, action) => {

@@ -2,7 +2,7 @@ import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import createAccountImage from "../assets/createAcoount.png";
+import createAccountImage from "../assets/createAccount.png";
 import { loginLocalAccount, registerLocalAccount } from "../Utils/localAccount";
 
 const SignUp = () => {

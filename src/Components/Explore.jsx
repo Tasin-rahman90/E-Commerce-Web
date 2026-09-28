@@ -5,6 +5,7 @@ import Card from './Card';
 import SecHead from './SecHead';
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import Btn from './Btn';
+import { getDiscountedPrice } from '../Utils/price';
 
 const Explore = ({ products = [] }) => {
   function SampleNextArrow({ onClick }) {
@@ -63,13 +64,10 @@ const Explore = ({ products = [] }) => {
                     <Card
                       key={item.id}
                       id={item.id}
-                      productDeatils={item}
-                      parcent={item.discountPercentage}
-                      modle={item.title}
-                      discountPrice={`$${item.price.toFixed(2)}`}
-                      regularPrice={`$${(
-                        item.price / (1 - item.discountPercentage / 100)
-                      ).toFixed(2)}`}
+                      productDetails={item}
+                      percent={item.discountPercentage}
+                      title={item.title}
+                      discountPrice={getDiscountedPrice(item)}
                       rate={item.rating}
                       itemImg={item.thumbnail}
                     />

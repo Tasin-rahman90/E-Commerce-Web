@@ -4,6 +4,7 @@ import SecHead from './SecHead'
 import Btn from './Btn'
 import Card from './Card'
 import Experience from './Experience'
+import { getDiscountedPrice } from '../Utils/price'
 
 const BestProduct = ({ products = [] }) => {
   return (
@@ -22,24 +23,21 @@ const BestProduct = ({ products = [] }) => {
               />
             </div>
           </div>
-          <div className='flex justify-between mt-20'>
+          <div className='mt-12 grid grid-cols-1 justify-items-center gap-8 sm:mt-16 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4'>
             {products.slice(0, 4).map((product) => (
               <Card
                 key={product.id}
                 id={product.id}
-                productDeatils={product}
-                parcent={product.discountPercentage}
-                modle={product.title}
-                discountPrice={`$${product.price.toFixed(2)}`}
-                regularPrice={`$${(
-                  product.price / (1 - product.discountPercentage / 100)
-                ).toFixed(2)}`}
+                productDetails={product}
+                percent={product.discountPercentage}
+                title={product.title}
+                discountPrice={getDiscountedPrice(product)}
                 rate={product.rating}
                 itemImg={product.thumbnail}
               />
             ))}
           </div>
-          <Experience className='mt-35 mb-17.75'/>
+          <Experience className='mt-16 mb-16 lg:mt-35 lg:mb-17.75'/>
         </Container>
       </div>
     </>

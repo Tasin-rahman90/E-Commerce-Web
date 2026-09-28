@@ -27,3 +27,9 @@
   stroke: white;
 }
 
+@media (max-width: 569px) {
+  .banner-carousel .slick-arrow {
+    display: none !important;
+  }
+}
+

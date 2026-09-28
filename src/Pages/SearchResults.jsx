@@ -5,6 +5,7 @@ import BreadCrump from "../Components/BreadCrump";
 import Card from "../Components/Card";
 import Container from "../Components/Container";
 import { searchProducts } from "../Utils/productSearch";
+import { getDiscountedPrice } from "../Utils/price";
 
 const SearchSkeleton = () => (
   <div className="grid grid-cols-1 justify-items-center gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="Loading search results" aria-busy="true">
@@ -55,8 +56,8 @@ const SearchResults = () => {
   }, [query, retryKey]);
 
   const sortedProducts = [...products].sort((first, second) => {
-    if (sortOrder === "price-low") return first.price - second.price;
-    if (sortOrder === "price-high") return second.price - first.price;
+    if (sortOrder === "price-low") return getDiscountedPrice(first) - getDiscountedPrice(second);
+    if (sortOrder === "price-high") return getDiscountedPrice(second) - getDiscountedPrice(first);
     return 0;
   });
 
@@ -125,11 +126,10 @@ const SearchResults = () => {
               <Card
                 key={item.id}
                 id={item.id}
-                productDeatils={item}
-                parcent={item.discountPercentage}
-                modle={item.title}
-                discountPrice={(item.price - (item.price * item.discountPercentage) / 100).toFixed(2)}
-                regularPrice={item.price}
+                productDetails={item}
+                percent={item.discountPercentage}
+                title={item.title}
+                discountPrice={getDiscountedPrice(item)}
                 rate={item.rating}
                 itemImg={item.thumbnail}
               />
